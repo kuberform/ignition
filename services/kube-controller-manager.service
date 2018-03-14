@@ -1,0 +1,21 @@
+[Unit]
+Description=Kubernetes Controller Manager
+After=kube-apiserver.service
+Requires=kube-apiserver.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStart=/usr/bin/docker run \
+  --name %n --rm \
+  --volume /etc/kubernetes:/etc/kubernetes:ro \
+  --volume /etc/resolv.conf:/etc/resolv.conf:ro \
+  --volume /etc/ssl:/etc/ssl:ro \
+  --volume /tmp:/tmp:ro \
+  --volume /var/log:/var/log:ro \
+  ${IMAGE_SOURCE}:${IMAGE_TAG} \
+  /usr/local/bin/kube-controller-manager
+
+
+[Install]
+WantedBy=multi-user.target

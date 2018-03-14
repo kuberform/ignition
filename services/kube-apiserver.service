@@ -1,0 +1,33 @@
+[Unit]
+Description=Kubernetes API Server
+After=docker.service etcd.service
+Requires=docker.service etcd.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/mkdir -p /etc/kubernetes
+ExecStart=/usr/bin/docker run \
+  --name %n --rm \
+  --publish 6443:6443 \
+  --volume /etc/kubernetes:/etc/kubernetes:ro \
+  --volume /etc/resolv.conf:/etc/resolv.conf:ro \
+  --volume /etc/ssl:/etc/ssl:ro \
+  --volume /tmp:/tmp:ro \
+  --volume /var/log:/var/log:ro \
+  ${IMAGE_SOURCE}:${IMAGE_TAG} \
+  /usr/local/bin/kube-apiserver \
+  --allow-privileged false \
+  --apiserver-count 3 \
+  --etcd-cafile /etc/ssl/certs/ca.crt \
+  --etcd-certfile /etc/ssl/certs/etcd.crt \
+  --etcd-keyfile /etc/ssl/certs/etcd.key \
+  --etcd-servers https://etcd.us-east-2.k8s.audios.cloud:2379 \
+  --secure-port 6443 \
+  --tls-ca-file /etc/ssl/certs/ca.crt \
+  --tls-cert-file /etc/ssl/certs/kubernetes.crt \
+  --tls-private-key-file /etc/ssl/certs/kubernetes.key
+
+
+[Install]
+WantedBy=multi-user.target

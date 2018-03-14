@@ -1,0 +1,38 @@
+[Unit]
+Description=Distributed Key Value store for Kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/mkdir -p /var/lib/etcd
+ExecStart=/usr/bin/docker run \
+    --name %n --rm \
+    --volume /var/lib/etcd:/var/lib/etcd \
+    --volume /etc/resolv.conf:/etc/resolv.conf:ro \
+    --volume /etc/ssl:/etc/ssl:ro \
+    --volume /tmp:/tmp:ro \
+    --volume /var/log:/var/log:ro \
+    ${IMAGE_SOURCE}:${IMAGE_TAG} \
+  /usr/local/bin/etcd \
+    --name %H \
+    --listen-client-urls "https://0.0.0.0:2379" \
+    --listen-peer-urls "https://0.0.0.0:2380" \
+    -–initial-advertise-peer-urls "https://%H:2380" \
+    --initial-cluster-state "new" \
+    --initial-cluster-token "${INITIAL_TOKEN}" \
+    --advertise-client-urls "https://%H:2379" \
+    --discovery-srv "${INITIAL_SRV}" \
+    --enable-v2 \
+    --trusted-ca-file "/etc/ssl/certs/ca_etcd_chain.pem" \
+    --cert-file "/etc/ssl/certs/etcd_server.pem" \
+    --key-file "/etc/ssl/private/etcd_server.pem" \
+    --client-cert-auth "true" \
+    --peer-trusted-ca-file "/etc/ssl/certs/ca_etcd_chain.pem" \
+    --peer-cert-file "/etc/ssl/certs/etcd_server.pem" \
+    --peer-key-file "/etc/ssl/private/etcd_server.pem" \
+    --peer-client-cert-auth "true"
+
+[Install]
+WantedBy=multi-user.target
