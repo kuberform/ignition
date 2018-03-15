@@ -1,14 +1,14 @@
-data "template_file" "kube-apiserver" {
-  template = "${file("${path.module}/services/kube-apiserver.service")}"
+data "template_file" "kuberform-apiserver" {
+  template = "${file("${path.module}/services/kuberform-apiserver.service")}"
 
   vars {
-    IMAGE_SOURCE = "${var.kubernetes["kube-apiserver"]}"
+    IMAGE_SOURCE = "${var.kubernetes["kuberform-apiserver"]}"
     IMAGE_TAG    = "${var.kubernetes_tag}"
   }
 }
 
-data "ignition_systemd_unit" "kube-apiserver" {
-  name    = "kube-apiserver.service"
+data "ignition_systemd_unit" "kuberform-apiserver" {
+  name    = "kuberform-apiserver.service"
   enabled = true
-  content = "${data.template_file.kube-apiserver.rendered}"
+  content = "${data.template_file.kuberform-apiserver.rendered}"
 }

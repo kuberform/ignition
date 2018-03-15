@@ -1,14 +1,14 @@
-data "template_file" "kube-controller-manager" {
-  template = "${file("${path.module}/services/kube-controller-manager.service")}"
+data "template_file" "kuberform-controller-manager" {
+  template = "${file("${path.module}/services/kuberform-controller-manager.service")}"
 
   vars {
-    IMAGE_SOURCE = "${var.kubernetes["kube-controller-manager"]}"
+    IMAGE_SOURCE = "${var.kubernetes["kuberform-controller-manager"]}"
     IMAGE_TAG    = "${var.kubernetes_tag}"
   }
 }
 
-data "ignition_systemd_unit" "kube-controller-manager" {
-  name    = "kube-controller-manager.service"
+data "ignition_systemd_unit" "kuberform-controller-manager" {
+  name    = "kuberform-controller-manager.service"
   enabled = true
-  content = "${data.template_file.kube-controller-manager.rendered}"
+  content = "${data.template_file.kuberform-controller-manager.rendered}"
 }

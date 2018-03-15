@@ -1,7 +1,7 @@
 [Unit]
 Description=Kubernetes Scheduler Service
-After=kube-apiserver.service kube-controller-manager.service cloud-controller-manager.service
-Requires=kube-apiserver.service kube-controller-manager.service cloud-controller-manager.service
+After=kuberform-apiserver.service kuberform-controller-manager.service cloud-controller-manager.service
+Requires=kuberform-apiserver.service kuberform-controller-manager.service cloud-controller-manager.service
 
 [Service]
 TimeoutStartSec=0
@@ -14,7 +14,7 @@ ExecStart=/usr/bin/docker run \
   --volume /tmp:/tmp:ro \
   --volume /var/log:/var/log:ro \
   ${IMAGE_SOURCE}:${IMAGE_TAG} \
-  /usr/local/bin/kube-scheduler
+  /usr/local/bin/kuberform-scheduler
 
 
 [Install]

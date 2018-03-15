@@ -1,0 +1,2 @@
+/docs/ @kuberform/docteam
+*.tf   @kuberform/terraformdev

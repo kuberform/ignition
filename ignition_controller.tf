@@ -1,9 +1,9 @@
 data "ignition_config" "ignition_controller" {
   systemd = [
     "${data.ignition_systemd_unit.cloud-controller-manager.id}",
-    "${data.ignition_systemd_unit.kube-apiserver.id}",
-    "${data.ignition_systemd_unit.kube-controller-manager.id}",
-    "${data.ignition_systemd_unit.kube-scheduler.id}",
+    "${data.ignition_systemd_unit.kuberform-apiserver.id}",
+    "${data.ignition_systemd_unit.kuberform-controller-manager.id}",
+    "${data.ignition_systemd_unit.kuberform-scheduler.id}",
   ]
 
   files = [
